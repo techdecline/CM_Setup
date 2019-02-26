@@ -3,7 +3,6 @@ This project helps accelerating ConfigMgr deployments including documentation an
 As ConfigMgr does not allow installation using DSC, only pre-install is implemented using DSC. The actual ConfigMgr installation needs to be done manually.
 
 # Getting Started
-
 1. Create Folder Structure (C:\Install\SqlServer2016, C:\Install\SSMS, C:\Install\ADK)
 2. Download SQL Server 2016 ISO and extract to C:\Install\SqlServer2016
 3. Download SSMS from https://download.microsoft.com/download/D/D/4/DD495084-ADA7-4827-ADD3-FC566EC05B90/SSMS-Setup-ENU.exe and save to C:\Install\SSMS
@@ -20,3 +19,6 @@ As ConfigMgr does not allow installation using DSC, only pre-install is implemen
 7. Run Script C:\Install\CM_Setup\Script\ConfigMgr.ps1
 8. Apply Meta Config: Set-DscLocalConfigurationManager -Path C:\Code\CM_Setup\MOF
 9. Apply DSC Config: Start-DscConfiguration -Wait -Force -Verbose -Path C:\Code\CM_Setup\MOF
+
+# Open Tasks
+* SQL Server Temp Path etc. in Configuration Data
