@@ -11,14 +11,10 @@ As ConfigMgr does not allow installation using DSC, only pre-install is implemen
 
 # Install CM Prerequisites and Setup Host 
 1. Download Repository to C:\Code
-2. Update C:\Code\CM_Setup\SingleHost.psd1 according to your scenario (line 6, 7, 11)
+2. Update C:\Code\CM_Setup\SingleHost.psd1 according to your scenario.
 3. Download required PS Modules (SqlServerDsc, NetworkingDsc)
 4. Download ADK Installer and WinPE Addon for Windows 10 1809
 5. Run both Installers and download all content to C:\Install\ADK\ADK1809 and C:\Install\ADK\ADK1809_PE
-6. Update SqlSetup Block according to your partition setup
-7. Run Script C:\Install\CM_Setup\Script\ConfigMgr.ps1
-8. Apply Meta Config: Set-DscLocalConfigurationManager -Path C:\Code\CM_Setup\MOF
-9. Apply DSC Config: Start-DscConfiguration -Wait -Force -Verbose -Path C:\Code\CM_Setup\MOF
-
-# Open Tasks
-* SQL Server Temp Path etc. in Configuration Data
+6. Run Script C:\Install\CM_Setup\Script\ConfigMgr.ps1
+7. Apply Meta Config: Set-DscLocalConfigurationManager -Path C:\Code\CM_Setup\MOF
+8. Apply DSC Config: Start-DscConfiguration -Wait -Force -Verbose -Path C:\Code\CM_Setup\MOF
