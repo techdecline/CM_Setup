@@ -147,13 +147,14 @@ configuration ConfigMgr
             Features = "SQLENGINE,RS"
             UpdateEnabled = "0"
             SQLCollation = "SQL_Latin1_General_CP1_CI_AS"
-            InstallSharedDir = "C:\Program Files\Microsoft SQL Server"
-            InstallSharedWOWDir = "C:\Program Files (x86)\Microsoft SQL Server"
-            InstanceDir = "C:\Program Files\Microsoft SQL Server"
+            #InstallSharedDir = "C:\Program Files\Microsoft SQL Server"
+            InstallSharedDir = join-path -Path $node.SqlInstallDriveLetter -childPath "Program Files\Microsoft SQL Server"
+            InstallSharedWOWDir = join-path -Path $node.SqlInstallDriveLetter -childPath "Program Files (x86)\Microsoft SQL Server"
+            InstanceDir = join-path -Path $node.SqlInstanceDriveLetter -childPath "Program Files\Microsoft SQL Server"
             SQLSvcAccount = $SqlServiceAccount
-            SQLTempDBDir = "C:\SQLTempDB"
-            SQLBackupDir = "C:\SQLBackup"
-            SQLSysAdminAccounts = "Administrators"
+            SQLTempDBDir = join-path -Path $node.SqlTempDriveLetter -ChildPath "SQLTempDB"
+            SQLBackupDir = join-path -Path $node.SqlBackupDriveLetter -ChildPath "SQLBackup"
+            SQLSysAdminAccounts = $node.SqlSysAdminAccounts
         }
 
         SqlWindowsFirewall ($Node.NodeName + $Node.InstanceName)

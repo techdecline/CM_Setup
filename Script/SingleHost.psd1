@@ -12,6 +12,11 @@
             Role = "ConfigMgr","SQLServer"
             #CertificateFile = "C:\Configs\PublicKeys\Server1.cer"
             InstanceName = "SCCM" # Required because of Single Server Setup
+            SqlBackupDriveLetter = "I:\"
+            SqlTempDriveLetter = "F:\"
+            SqlInstallDriveLetter = "E:\"
+            SqlInstanceDriveLetter = "E:\"
+            SqlSysAdminAccounts = "Administrators", "decline\Domain Admins"
             }<#,
         @{
             NodeName = "CMTP_Server2"
