@@ -229,7 +229,7 @@ configuration ConfigMgr
     }
 }
 
-$setupCred = get-credential
+$setupCred = Get-Credential -Message "Enter Setup Credentials"
 $LocalSystemCred = New-Object System.Management.Automation.PSCredential "SYSTEM",(ConvertTo-SecureString -AsPlainText "blabla" -Force)
 ConfigMgr -OutputPath 'C:\Code\CM_Setup\MOF' `
     -ConfigurationData "C:\Code\CM_Setup\Script\SingleHost.psd1" -SetupCredential $setupCred -SqlServiceAccount $LocalSystemCred

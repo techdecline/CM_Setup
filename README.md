@@ -15,6 +15,6 @@ As ConfigMgr does not allow installation using DSC, only pre-install is implemen
 3. Download required PS Modules (SqlServerDsc, NetworkingDsc)
 4. Download ADK Installer and WinPE Addon for Windows 10 1809
 5. Run both Installers and download all content to C:\Install\ADK\ADK1809 and C:\Install\ADK\ADK1809_PE
-6. Run Script C:\Install\CM_Setup\Script\ConfigMgr.ps1
+6. Run Script C:\Code\CM_Setup\Script\ConfigMgr.ps1
 7. Apply Meta Config: Set-DscLocalConfigurationManager -Path C:\Code\CM_Setup\MOF
 8. Apply DSC Config: Start-DscConfiguration -Wait -Force -Verbose -Path C:\Code\CM_Setup\MOF
