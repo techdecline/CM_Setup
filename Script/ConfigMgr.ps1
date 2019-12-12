@@ -107,20 +107,20 @@ configuration ConfigMgr
         Package ("WADK" + $Node.NodeName)
         {
             Ensure = "Present"
-            Path  = join-path $Node.sourcePath -childpath "ADK\ADK1809\adksetup.exe"
+            Path  = join-path $Node.sourcePath -childpath "ADK\ADK1909\adksetup.exe"
             Name = "Windows Assessment and Deployment Kit - Windows 10"
             Credential=$SetupCredential
-            ProductId = "{3dec9467-d9ad-42df-8e84-888057bac8f1}"
+            ProductId = "{756E0930-449C-2690-26E0-9CA5093C9CAF}"
             Arguments = "/features OptionId.DeploymentTools OptionId.ImagingAndConfigurationDesigner OptionId.UserStateMigrationTool /quiet /log $env:Temp\ADK.log /forcerestart"
         }
 
         Package ("WADK_PE" + $Node.NodeName)
         {
             Ensure = "Present"
-            Path  = join-path $Node.sourcePath -childpath "ADK\ADK1809_PE\adkwinpesetup.exe"
+            Path  = join-path $Node.sourcePath -childpath "ADK\ADK1909_PE\adkwinpesetup.exe"
             Name = "Windows Assessment and Deployment Kit Windows Preinstallation Environment Add-ons - Windows 10"
             Credential=$SetupCredential
-            ProductId = "{d5163028-7863-4874-9e37-2284427b76fb}"
+            ProductId = "{052B0663-5E16-3B00-3C18-E985F9785450}"
             Arguments = "/features OptionId.WindowsPreinstallationEnvironment /quiet /log $env:Temp\ADK.log /forcerestart"
         }
     }
@@ -142,9 +142,9 @@ configuration ConfigMgr
         SqlSetup ($Node.NodeName + $Node.InstanceName)
         {
             DependsOn = "[WindowsFeature]DotNet3"
-            SourcePath = (join-path $Node.SourcePath -ChildPath "SQLServer2016")
+            SourcePath = (join-path $Node.SourcePath -ChildPath "SQLServer2017")
             InstanceName = $Node.InstanceName
-            Features = "SQLENGINE,RS"
+            Features = "SQLENGINE"
             UpdateEnabled = "0"
             SQLCollation = "SQL_Latin1_General_CP1_CI_AS"
             #InstallSharedDir = "C:\Program Files\Microsoft SQL Server"
@@ -157,12 +157,22 @@ configuration ConfigMgr
             SQLSysAdminAccounts = $node.SqlSysAdminAccounts
         }
 
+        Package ($Node.NodeName + $Node.InstanceName)
+        {
+            DependsOn = ("[SqlSetup]" + $Node.NodeName + $Node.InstanceName)
+            Path = (join-path $Node.SourcePath -ChildPath "SQLServer2017RS\SQLServerReportingServices.exe")
+            Name = "SQL Server 2017 Reporting Services"
+            Credential=$SetupCredential
+            ProductId = "{4de1a9d3-1518-4017-a60b-6de161760c76}"
+            Arguments = "/passive /norestart /IAcceptLicenseTerms /log $env:Temp\SQLReportingServices.log"
+        }
+
         SqlWindowsFirewall ($Node.NodeName + $Node.InstanceName)
         {
             DependsOn = ("[SqlSetup]" + $Node.NodeName + $Node.InstanceName)
-            SourcePath = (join-path $Node.SourcePath -ChildPath "SQLServer2016")
+            SourcePath = (join-path $Node.SourcePath -ChildPath "SQLServer2017")
             InstanceName = $Node.InstanceName
-            Features = "SQLENGINE,RS"
+            Features = "SQLENGINE"
         }
 
         sqlServerNetwork ($Node.NodeName + $Node.InstanceName)
@@ -229,7 +239,7 @@ configuration ConfigMgr
     }
 }
 
-$setupCred = get-credential
+$setupCred = Get-Credential -Message "Enter Setup Credentials"
 $LocalSystemCred = New-Object System.Management.Automation.PSCredential "SYSTEM",(ConvertTo-SecureString -AsPlainText "blabla" -Force)
 ConfigMgr -OutputPath 'C:\Code\CM_Setup\MOF' `
     -ConfigurationData "C:\Code\CM_Setup\Script\SingleHost.psd1" -SetupCredential $setupCred -SqlServiceAccount $LocalSystemCred
