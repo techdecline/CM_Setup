@@ -107,20 +107,20 @@ configuration ConfigMgr
         Package ("WADK" + $Node.NodeName)
         {
             Ensure = "Present"
-            Path  = join-path $Node.sourcePath -childpath "ADK\ADK1909\adksetup.exe"
+            Path  = join-path $Node.sourcePath -childpath "ADK\ADK2004\adksetup.exe"
             Name = "Windows Assessment and Deployment Kit - Windows 10"
             Credential=$SetupCredential
-            ProductId = "{756E0930-449C-2690-26E0-9CA5093C9CAF}"
+            ProductId = "{9346016b-6620-4841-8ea4-ad91d3ea02b5}"
             Arguments = "/features OptionId.DeploymentTools OptionId.ImagingAndConfigurationDesigner OptionId.UserStateMigrationTool /quiet /log $env:Temp\ADK.log /forcerestart"
         }
 
         Package ("WADK_PE" + $Node.NodeName)
         {
             Ensure = "Present"
-            Path  = join-path $Node.sourcePath -childpath "ADK\ADK1909_PE\adkwinpesetup.exe"
+            Path  = join-path $Node.sourcePath -childpath "ADK\ADK2004_PE\adkwinpesetup.exe"
             Name = "Windows Assessment and Deployment Kit Windows Preinstallation Environment Add-ons - Windows 10"
             Credential=$SetupCredential
-            ProductId = "{052B0663-5E16-3B00-3C18-E985F9785450}"
+            ProductId = "{353df250-4ecc-4656-a950-4df93078a5fd}"
             Arguments = "/features OptionId.WindowsPreinstallationEnvironment /quiet /log $env:Temp\ADK.log /forcerestart"
         }
     }
@@ -142,7 +142,7 @@ configuration ConfigMgr
         SqlSetup ($Node.NodeName + $Node.InstanceName)
         {
             DependsOn = "[WindowsFeature]DotNet3"
-            SourcePath = (join-path $Node.SourcePath -ChildPath "SQLServer2017")
+            SourcePath = (join-path $Node.SourcePath -ChildPath "SQLServer2019")
             InstanceName = $Node.InstanceName
             Features = "SQLENGINE"
             UpdateEnabled = "0"
@@ -157,13 +157,24 @@ configuration ConfigMgr
             SQLSysAdminAccounts = $node.SqlSysAdminAccounts
         }
 
+        Package ("SQL-CU8" + $Node.InstanceName)
+        {
+            DependsOn = ("[SqlSetup]" + $Node.NodeName + $Node.InstanceName)
+            Ensure = "Present"
+            Path = (join-path $Node.SourcePath -ChildPath "SQLServer2019CU8\Setup.exe")
+            Name = "Hotfix 4073 for SQL Server 2019 (KB4577194) (64-bit)"
+            Credential=$SetupCredential
+            ProductId = ""
+            Arguments = "/quiet /IAcceptSQLServerLicenseTerms /Action=Patch /AllInstances"
+        }
+
         Package ($Node.NodeName + $Node.InstanceName)
         {
             DependsOn = ("[SqlSetup]" + $Node.NodeName + $Node.InstanceName)
-            Path = (join-path $Node.SourcePath -ChildPath "SQLServer2017RS\SQLServerReportingServices.exe")
-            Name = "SQL Server 2017 Reporting Services"
+            Path = (join-path $Node.SourcePath -ChildPath "SQLServer2019RS\SQLServerReportingServices.exe")
+            Name = "SQL Server 2019 Reporting Services"
             Credential=$SetupCredential
-            ProductId = "{4de1a9d3-1518-4017-a60b-6de161760c76}"
+            ProductId = "{4b685015-f3d6-4fc3-9dbd-97ec3f0ed795}"
             Arguments = "/passive /norestart /IAcceptLicenseTerms /log $env:Temp\SQLReportingServices.log"
         }
 
@@ -231,9 +242,9 @@ configuration ConfigMgr
         {
             Ensure = "Present"
             Path  = (join-path $Node.SourcePath -ChildPath "SSMS\SSMS-Setup-ENU.exe")
-            Name = "Microsoft SQL Server Management Studio - 17.9.1"
+            Name = "Microsoft SQL Server Management Studio - 18.8"
             Credential=$SetupCredential
-            ProductId = "{91a1b895-c621-4038-b34a-01e7affbcb6b}"
+            ProductId = "{03FFD0DE-C109-45D1-9C19-C010A02CFC73}"
             Arguments = "/install /silent /norestart"
         }
     }
